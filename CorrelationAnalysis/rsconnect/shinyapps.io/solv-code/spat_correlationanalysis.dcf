@@ -1,0 +1,10 @@
+name: spat_correlationanalysis
+title: SPAT_CorrelationAnalysis
+username:
+account: solv-code
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1745053
+bundleId: 2784004
+url: https://solv-code.shinyapps.io/spat_correlationanalysis/
+when: 1581131934.9873
