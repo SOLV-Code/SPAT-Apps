@@ -76,7 +76,7 @@ clusters.range <- 1:10
       data.mod <- data.mod %>% left_join(grp3.idx$agg.idx,by="yr")}       
 
     if(input$group4.idx != "none"){ 
-      data.grp4 <- selectedData.group3()
+      data.grp4 <- selectedData.group4()
       grp4.idx <- plotGroup(data.grp4,agg.idx = input$group4.idx,plot.type="none",idx.label = "Idx_Grp4")
       data.mod <- data.mod %>% left_join(grp4.idx$agg.idx,by="yr")}           
     
