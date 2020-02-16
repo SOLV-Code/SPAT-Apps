@@ -19,10 +19,12 @@ library("SPATFunctions")
 # need to make this responsive to package functions	
 options.list <- list(transforms = c("none","log","z-score","perc_rank"),
                      corr.methods = c("pearson","kendall", "spearman"),
+                     corr.plot.type = c("circle","color","number"),
                      plot.order = c("original","clustered") ,
                      Years = 1960:2020,
                      series.layout = c("single","2panels","2axes"),
-                     agg.idx = c("none","mean","median"))
+                     agg.idx = c("none","mean","median","sum","min","max")
+                     )
 
 
 # START UI -------------------------------------------
@@ -89,8 +91,10 @@ tabsetPanel(type = "tabs",
         sidebarLayout(
          sidebarPanel(width =2,    
             uiOutput("group1.menu"),
-            selectInput("group1.transform", "x_Group 1 Transform",  
+            selectInput("group1.transform", "Group 1 Transform",  
                         choices = options.list$transforms, selected = "none"),
+            sliderInput("group1.offset", "Group 1 Offset",  sep="",
+                        min = -10, max = 10, value = 0,animate=TRUE),
             selectInput("group1.idx", "Group 1 Agg. Index",  
                         choices = options.list$agg.idx, selected = options.list$agg.idx[1])),
          mainPanel(  plotlyOutput("group1.plot"))
@@ -100,8 +104,10 @@ tabsetPanel(type = "tabs",
      tabPanel("Group 2",sidebarLayout(
     sidebarPanel(width =2,    
                  uiOutput("group2.menu"),
-                 selectInput("group2.transform", "x_Group 2 Transform",  
+                 selectInput("group2.transform", "Group 2 Transform",  
                              choices = options.list$transforms, selected = "none") ,
+                 sliderInput("group2.offset", "Group 2 Offset",  sep="",
+                             min = -10, max = 10, value = 0,animate=TRUE),
                  selectInput("group2.idx", "Group 2 Agg. Index",  
                              choices = options.list$agg.idx, selected = options.list$agg.idx[1])),
         mainPanel(plotlyOutput("group2.plot"))
@@ -110,8 +116,10 @@ tabsetPanel(type = "tabs",
    tabPanel("Group 3",sidebarLayout(
      sidebarPanel(width =2,    
                   uiOutput("group3.menu"),
-                  selectInput("group3.transform", "x_Group 3 Transform",  
+                  selectInput("group3.transform", "Group 3 Transform",  
                               choices = options.list$transforms, selected = "none") ,
+                  sliderInput("group3.offset", "Group 3 Offset",  sep="",
+                              min = -10, max = 10, value = 0,animate=TRUE),
                   selectInput("group3.idx", "Group 3 Agg. Index",  
                               choices = options.list$agg.idx, selected = options.list$agg.idx[1])),
      mainPanel(plotlyOutput("group3.plot"))
@@ -120,8 +128,10 @@ tabsetPanel(type = "tabs",
    tabPanel("Group 4",sidebarLayout(
      sidebarPanel(width =2,    
                   uiOutput("group4.menu"),
-                  selectInput("group4.transform", "x_Group 4 Transform",  
+                  selectInput("group4.transform", "Group 4 Transform",  
                               choices = options.list$transforms, selected = "none"),
+                  sliderInput("group4.offset", "Group 4 Offset",  sep="",
+                              min = -10, max = 10, value = 0,animate=TRUE),
                   selectInput("group4.idx", "Group 4 Agg. Index",  
                               choices = options.list$agg.idx, selected = options.list$agg.idx[1])),
      mainPanel(plotlyOutput("group4.plot"))
@@ -152,7 +162,13 @@ tabPanel("3 Explore Pairs",	value = "pairwise",
                         selectInput("var.2.transform", "Var 2 Transform",  
                                     choices = options.list$transforms, selected = "none"),
                         sliderInput("var.2.offset", "Var 2 Offset",  sep="",
-                                    min = -10, max = 10, value = 0,animate=TRUE)
+                                    min = -10, max = 10, value = 0,animate=TRUE),
+                        selectInput("series.layout", "Layout",  choices = options.list$series.layout, 
+                                                      selected = options.list$series.layout[1]),
+                        checkboxInput("corrplotshow", label = "Show Correlation Plot", 
+                                                         value = TRUE, width = NULL),
+                        sliderInput("window", "window",  sep="",
+                                                       min = 4, max = 25, value = 12,animate=FALSE)
                         
            ),
            
@@ -161,17 +177,15 @@ tabPanel("3 Explore Pairs",	value = "pairwise",
              
              tabsetPanel(type = "tabs",
                          
-                         tabPanel("Series", 
+                         tabPanel("Series",
+                                
+                                # resizing: https://stackoverflow.com/questions/31882463/dynamic-plot-height-in-shiny    
+                                fluidRow(column(width = 12,plotlyOutput("series.plot"))), #,height = 400
                                   fluidRow(
-                                    column(width = 10,plotlyOutput("series.plot")),
-                                    column(width =2,selectInput("series.layout", "Layout",  choices = options.list$series.layout, 
-                                                                selected = options.list$series.layout[1]))
-                                  ),
-                                  fluidRow(
-                                    column(width = 10,plotlyOutput("series.corr.plot")),
-                                    column(width =2, sliderInput("window", "window",  sep="",
-                                                                 min = 4, max = 25, value = 12,animate=FALSE))
-                                  )),
+                                    column(width = 12,
+                                           conditionalPanel("input.corrplotshow", plotlyOutput("series.corr.plot"))))
+                                ),
+
                          tabPanel("Some Diagnostic Plot" ),
                          tabPanel("Correlations - Table")            
                          
@@ -196,6 +210,8 @@ tabPanel("4 Correlation Matrix",	value = "CorrMat",
 						selectInput("method.corr", "Method",  choices = options.list$corr.methods, selected = options.list$corr.methods[1]),
 				    selectInput("order.corr", "Ordering",  choices = options.list$plot.order, selected = options.list$plot.order[1]),
 				  	numericInput("n.clusters", "Num Groups", value=NA,min=2,max=9),
+						selectInput("corr.plot.type", "Plot Type",  
+						            choices = options.list$corr.plot.type, selected = "circle") ,
 						sliderInput("yrs.use.main", "Years",sep="",min = 1960, max = 2020, value = c(1980,2020),animate=TRUE),
 						uiOutput("var.main.menu")
 							),
