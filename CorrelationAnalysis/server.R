@@ -36,23 +36,60 @@ clusters.range <- 1:10
 	output$reports.path.use <- renderPrint({   parseDirPath(roots=volumes.use, selection =reports.path.use())  })
 
 
-	# Read in user-selected input file
+	# Read in user-selected input file and include user-specified aggregations
     data.file <- reactive({
 		inFile <- input$file.name.2
 		if(is.null(inFile)){data.use <-  SPATFunctions::SPATData_EnvCov}   
 		if(!is.null(inFile)){data.use <- read.csv(inFile$datapath, stringsAsFactors=FALSE)  
+		print("main data file")
 		print(head(data.use))
 			}
 	
 	# do steps here to check/filter the input file 	
 		data.use <- data.use #%>% drop_na() # but needs to depend on selected subset, 
 		                                    # so not doing anything here
-	
-	return(data.use)
+		
+		return(data.use)
 			
 	})
 
+    
+  data.mod.obs <- observe({ print(head(data.file.mod()))})
+    
+  data.file.mod <- reactive({
+    
+    data.mod <- data.file()
+    
+    if(input$group1.idx != "none"){ 
+      data.grp1 <- selectedData.group1()
+      grp1.idx <- plotGroup(data.grp1,agg.idx = input$group1.idx,plot.type="none",idx.label = "Idx_Grp1")
+      data.mod <- data.mod %>% left_join(grp1.idx$agg.idx,by="yr")}  
 
+    if(input$group2.idx != "none"){ 
+      data.grp2 <- selectedData.group2()
+      grp2.idx <- plotGroup(data.grp2,agg.idx = input$group2.idx,plot.type="none",idx.label = "Idx_Grp2")
+      data.mod <- data.mod %>% left_join(grp2.idx$agg.idx,by="yr")}      
+ 
+    if(input$group3.idx != "none"){ 
+      data.grp3 <- selectedData.group3()
+      grp3.idx <- plotGroup(data.grp3,agg.idx = input$group3.idx,plot.type="none",idx.label = "Idx_Grp3")
+      data.mod <- data.mod %>% left_join(grp3.idx$agg.idx,by="yr")}       
+
+    if(input$group4.idx != "none"){ 
+      data.grp4 <- selectedData.group3()
+      grp4.idx <- plotGroup(data.grp4,agg.idx = input$group4.idx,plot.type="none",idx.label = "Idx_Grp4")
+      data.mod <- data.mod %>% left_join(grp4.idx$agg.idx,by="yr")}           
+    
+    
+    return(data.mod)
+      
+    })  
+    
+
+
+    
+    
+    
 	output$input.table <- renderTable({ data.file() })  # masking issue with package DT? shiny::renderTable doesn't fix it
 
 
@@ -67,6 +104,25 @@ clusters.range <- 1:10
 			return(var.vec)
 			})
 	
+	vars.mod.obs <- observe({print(numeric.vars.mod())})
+	
+	numeric.vars.mod <- reactive({
+	  
+	  print("check")
+	  print(names(data.file.mod()))
+	  print(dim(data.file.mod()))
+	  num.idx <-  unlist(lapply(data.file.mod(), is.numeric))  
+	  print(num.idx)
+	  var.vec <- sort(names(data.file.mod())[num.idx])
+	  print(var.vec)
+	  var.vec <- var.vec[!(tolower(var.vec) %in% c("year","yr"))]
+	  print("numeric.vars.mod")
+	  print(var.vec)
+	  return(var.vec)
+	})
+	
+	
+	
 	char.vars <- reactive({
 			num.idx <-  unlist(lapply(data.file(), is.numeric))  
 			var.vec <- sort(names(data.file())[!num.idx])
@@ -76,8 +132,8 @@ clusters.range <- 1:10
 
 	# Variable List for Dropdown - Main Panel
 	output$var.main.menu <- renderUI({
-			selectInput("var.main", label = "Numeric Variables", choices = numeric.vars(),  
-			     multiple=TRUE,selected = numeric.vars()  )
+			selectInput("var.main", label = "Numeric Variables", choices = numeric.vars.mod(),  
+			     multiple=TRUE,selected = numeric.vars.mod()  )
 			})	
 			
 	
@@ -101,15 +157,15 @@ clusters.range <- 1:10
 
 	# Variable List for Dropdown - Pairwise Var 1
 	output$var.1.menu <- renderUI({
-	  selectInput("var.1", label = "Var 1", choices = numeric.vars(),  
-	              multiple=FALSE,selected = numeric.vars()[1]  )
+	  selectInput("var.1", label = "Var 1", choices = numeric.vars.mod(),  
+	              multiple=FALSE,selected = numeric.vars.mod()[1]  )
 	})	
 				
 
 	# Variable List for Dropdown - Pairwise Var 2
 	output$var.2.menu <- renderUI({
-	  selectInput("var.2", label = "Var 2", choices = numeric.vars(),  
-	              multiple=FALSE,selected = numeric.vars()[2]  )
+	  selectInput("var.2", label = "Var 2", choices = numeric.vars.mod(),  
+	              multiple=FALSE,selected = numeric.vars.mod()[2]  )
 	})	
 				
 			
@@ -125,10 +181,11 @@ clusters.range <- 1:10
 # Main Panel - Correlation MAtrix
 
    selectedData.main <- reactive({
-    print(input$var.main)
+    print("input$var.main")
+     print(input$var.main)
      
      # filter out selected years and variables
-		data.use <- data.file()  %>% 
+		data.use <- data.file.mod()  %>% 
 		            dplyr::filter(yr >= input$yrs.use.main[1] & yr <= input$yrs.use.main[2]) %>%
 		            dplyr::select(input$var.main)
 		#data.use  <- transformData(x=data.use ,type= input$transform.1value, cols=input$var.1val,zero.convert = NA)
@@ -174,7 +231,7 @@ clusters.range <- 1:10
 	
     corr.fit <- corr.mat()
     print(input$order.corr)
-    plotCorrMatrix(corr.fit$cor.mat,order=input$order.corr,n.groups=input$n.clusters)  
+    plotCorrMatrix(corr.fit$cor.mat,order=input$order.corr,n.groups=input$n.clusters,plot.type=input$corr.plot.type)  
     
     })
 	
@@ -189,13 +246,16 @@ clusters.range <- 1:10
    ## NEED TO MAKE IT REACTIVE
   
    selectedData.pairwise <- reactive({
-			
-		data.use <- data.file()  %>% dplyr::select(yr,input$var.1,input$var.2)
+		 print("starting selectedDat.pairwise")
+     print(input$var.1)
+     print(input$var.2)
+     	
+		data.use <- data.file.mod()  %>% dplyr::select(yr,input$var.1,input$var.2)
     
-		print(head(data.use))
+		#print(head(data.use))
 		
 		data.use <- shiftSeries(data.use, offsets=c(0,0,input$var.2.offset))
-		print(head(data.use))
+		#print(head(data.use))
 		
 		data.use <- transformData(data.use,type=input$var.1.transform,
 		                        cols=names(data.use)[2],
@@ -236,8 +296,13 @@ clusters.range <- 1:10
   # Grouping Plots
 
   selectedData.group1 <- reactive({
-    # transforms not linked up yet , offsets not meaningful for this?    
+      
     data.use <- data.file()  %>% dplyr::select(yr,input$var.group1)
+    n.var <- dim(data.use)[2]-1
+    data.use <- shiftSeries(data.use, offsets=c(0,rep(input$group1.offset,n.var)))
+    data.use <- transformData(data.use,type=input$group1.transform,
+                              cols=names(data.use)[-1], # all except first col which is "yr"
+                              zero.convert = NA )
     return(data.use) })
 
   output$group1.plot <- renderPlotly({
@@ -249,8 +314,13 @@ clusters.range <- 1:10
   })
   
   selectedData.group2 <- reactive({
-    # transforms not linked up yet , offsets not meaningful for this?    
+     
     data.use <- data.file()  %>% dplyr::select(yr,input$var.group2)
+    n.var <- dim(data.use)[2]-1
+    data.use <- shiftSeries(data.use, offsets=c(0,rep(input$group2.offset,n.var)))
+    data.use <- transformData(data.use,type=input$group2.transform,
+                              cols=names(data.use)[-1], # all except first col which is "yr"
+                              zero.convert = NA )
     return(data.use) })
   
   output$group2.plot <- renderPlotly({
@@ -262,8 +332,12 @@ clusters.range <- 1:10
   })
  
   selectedData.group3 <- reactive({
-    # transforms not linked up yet , offsets not meaningful for this?    
     data.use <- data.file()  %>% dplyr::select(yr,input$var.group3)
+    n.var <- dim(data.use)[2]-1
+    data.use <- shiftSeries(data.use, offsets=c(0,rep(input$group3.offset,n.var)))
+    data.use <- transformData(data.use,type=input$group3.transform,
+                              cols=names(data.use)[-1], # all except first col which is "yr"
+                              zero.convert = NA )
     return(data.use) })
   
   output$group3.plot <- renderPlotly({
@@ -275,8 +349,13 @@ clusters.range <- 1:10
   }) 
   
   selectedData.group4 <- reactive({
-    # transforms not linked up yet , offsets not meaningful for this?    
+
     data.use <- data.file()  %>% dplyr::select(yr,input$var.group4)
+    n.var <- dim(data.use)[2]-1
+    data.use <- shiftSeries(data.use, offsets=c(0,rep(input$group4.offset,n.var)))
+    data.use <- transformData(data.use,type=input$group4.transform,
+                              cols=names(data.use)[-1], # all except first col which is "yr"
+                              zero.convert = NA )
     return(data.use) })
   
   output$group4.plot <- renderPlotly({
