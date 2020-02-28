@@ -67,7 +67,7 @@ tabPanel("1 Data Loading", value= "data.loading",
 			  tags$hr(),
 			  fileInput("file.name.2", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain", ".csv")    ),
 			  tags$hr() ,
-			  tags$a("Get Some Sample Data",href="https://www.dropbox.com/sh/x219hiswog9gvnl/AAB3YrxZ6ifmf2w22nFggZlca?dl=0",target="_blank")
+			  tags$a("Get Some Sample Data (CorrApp in filename)",href="https://www.dropbox.com/sh/x219hiswog9gvnl/AAB3YrxZ6ifmf2w22nFggZlca?dl=0",target="_blank")
 			  ), # end sidebar
 
         mainPanel(			
@@ -96,7 +96,10 @@ tabsetPanel(type = "tabs",
             sliderInput("group1.offset", "Group 1 Offset",  sep="",
                         min = -10, max = 10, value = 0,animate=TRUE),
             selectInput("group1.idx", "Group 1 Agg. Index",  
-                        choices = options.list$agg.idx, selected = options.list$agg.idx[1])),
+                        choices = options.list$agg.idx, selected = options.list$agg.idx[1]) ,
+            textInput("grp1.idx.label", label=NULL, value = "Label1"),
+            downloadButton("idx1.download", label = "Download")
+            ),
          mainPanel(  plotlyOutput("group1.plot"))
         )), # end side bar layout and tab panel for group 1
          
@@ -109,7 +112,10 @@ tabsetPanel(type = "tabs",
                  sliderInput("group2.offset", "Group 2 Offset",  sep="",
                              min = -10, max = 10, value = 0,animate=TRUE),
                  selectInput("group2.idx", "Group 2 Agg. Index",  
-                             choices = options.list$agg.idx, selected = options.list$agg.idx[1])),
+                             choices = options.list$agg.idx, selected = options.list$agg.idx[1]) ,
+                 textInput("grp2.idx.label", label=NULL, value = "Label2"),
+                 downloadButton("idx2.download", label = "Download")
+                  ),
         mainPanel(plotlyOutput("group2.plot"))
           )),# end side bar layout and tab panel for group 2
   
@@ -121,7 +127,10 @@ tabsetPanel(type = "tabs",
                   sliderInput("group3.offset", "Group 3 Offset",  sep="",
                               min = -10, max = 10, value = 0,animate=TRUE),
                   selectInput("group3.idx", "Group 3 Agg. Index",  
-                              choices = options.list$agg.idx, selected = options.list$agg.idx[1])),
+                              choices = options.list$agg.idx, selected = options.list$agg.idx[1]) ,
+                  textInput("grp3.idx.label", label=NULL, value = "Label3"),
+                  downloadButton("idx3.download", label = "Download")
+                  ),
      mainPanel(plotlyOutput("group3.plot"))
    )),# end side bar layout and tab panel for group 2
    
@@ -133,10 +142,16 @@ tabsetPanel(type = "tabs",
                   sliderInput("group4.offset", "Group 4 Offset",  sep="",
                               min = -10, max = 10, value = 0,animate=TRUE),
                   selectInput("group4.idx", "Group 4 Agg. Index",  
-                              choices = options.list$agg.idx, selected = options.list$agg.idx[1])),
+                              choices = options.list$agg.idx, selected = options.list$agg.idx[1])  ,
+                  textInput("grp4.idx.label", label=NULL, value = "Label4"),
+                  downloadButton("idx4.download", label = "Download")
+                  ),
      mainPanel(plotlyOutput("group4.plot"))
       ))# end side bar layout and tab panel for group 2      
-                         
+  
+   
+   
+                      
                          
   ) # end tabset  inside GROUP panel
 
