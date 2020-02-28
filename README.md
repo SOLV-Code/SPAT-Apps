@@ -10,6 +10,8 @@ Running the apps locally improves speed and doesn't rely on internet access, but
 
 There are 2 options for running the apps locally. Both require that you first install and load the *SPAT Functions* package.
 
+**This requires installing several packages. See details below**
+
 
 ### R GUI
 
@@ -30,6 +32,17 @@ install_github("SOLV-Code/SPATFunctions-Package",
 library(SPATFunctions)
 
 ```
+
+
+
+### Required Packages
+
+
+Include a list
+show how to install
+
+
+
 
 
 
