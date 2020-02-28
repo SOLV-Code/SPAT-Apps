@@ -62,22 +62,22 @@ clusters.range <- 1:10
     
     if(input$group1.idx != "none"){ 
       data.grp1 <- selectedData.group1()
-      grp1.idx <- plotGroup(data.grp1,agg.idx = input$group1.idx,plot.type="none",idx.label = "Idx_Grp1")
+      grp1.idx <- plotGroup(data.grp1,agg.idx = input$group1.idx,plot.type="none",idx.label = input$grp1.idx.label)
       data.mod <- data.mod %>% left_join(grp1.idx$agg.idx,by="yr")}  
 
     if(input$group2.idx != "none"){ 
       data.grp2 <- selectedData.group2()
-      grp2.idx <- plotGroup(data.grp2,agg.idx = input$group2.idx,plot.type="none",idx.label = "Idx_Grp2")
+      grp2.idx <- plotGroup(data.grp2,agg.idx = input$group2.idx,plot.type="none",idx.label = input$grp2.idx.label)
       data.mod <- data.mod %>% left_join(grp2.idx$agg.idx,by="yr")}      
  
     if(input$group3.idx != "none"){ 
       data.grp3 <- selectedData.group3()
-      grp3.idx <- plotGroup(data.grp3,agg.idx = input$group3.idx,plot.type="none",idx.label = "Idx_Grp3")
+      grp3.idx <- plotGroup(data.grp3,agg.idx = input$group3.idx,plot.type="none",idx.label = input$grp3.idx.label)
       data.mod <- data.mod %>% left_join(grp3.idx$agg.idx,by="yr")}       
 
     if(input$group4.idx != "none"){ 
       data.grp4 <- selectedData.group4()
-      grp4.idx <- plotGroup(data.grp4,agg.idx = input$group4.idx,plot.type="none",idx.label = "Idx_Grp4")
+      grp4.idx <- plotGroup(data.grp4,agg.idx = input$group4.idx,plot.type="none",idx.label = input$grp4.idx.label)
       data.mod <- data.mod %>% left_join(grp4.idx$agg.idx,by="yr")}           
     
     
@@ -366,6 +366,18 @@ clusters.range <- 1:10
     
   })  
 
+  
+  
+  output$idx.download <- downloadHandler(
+    filename = function(){"Data_withAggregateIndices.csv"}, 
+    content = function(fname){
+      write.csv(data.file.mod(), fname,row.names=FALSE)
+    }
+  )
+  
+  
+  
+  
 
 } # end server.R
 

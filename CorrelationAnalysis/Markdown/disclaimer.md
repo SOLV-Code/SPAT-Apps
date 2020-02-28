@@ -13,7 +13,7 @@ implement different types of analysis. Comment on the types of data this makes s
 
 To check a list of know bugs/issues with this prototype, 
 and to add any new bugs/issues ,
-go to **[this github thread](https://github.com/SOLV-Code/Salmon-Pattern-Analysis-Tool/issues/38)**
+go to **[this github thread](https://github.com/SOLV-Code/SPAT-Apps/issues/10)**
 
 For more information about this app, check the *Help* and *About* tabs.
 
