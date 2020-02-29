@@ -6,7 +6,7 @@
 
 function(input, output, session) {
 
-print("Testing")
+#print("Testing")
 
 
 
@@ -41,8 +41,8 @@ clusters.range <- 1:10
 		inFile <- input$file.name.2
 		if(is.null(inFile)){data.use <-  SPATFunctions::SPATData_EnvCov}   
 		if(!is.null(inFile)){data.use <- read.csv(inFile$datapath, stringsAsFactors=FALSE)  
-		print("main data file")
-		print(head(data.use))
+		#print("main data file")
+		#print(head(data.use))
 			}
 	
 	# do steps here to check/filter the input file 	
@@ -108,16 +108,16 @@ clusters.range <- 1:10
 	
 	numeric.vars.mod <- reactive({
 	  
-	  print("check")
-	  print(names(data.file.mod()))
-	  print(dim(data.file.mod()))
+	  #print("check")
+	  #print(names(data.file.mod()))
+	  #print(dim(data.file.mod()))
 	  num.idx <-  unlist(lapply(data.file.mod(), is.numeric))  
-	  print(num.idx)
+	  #print(num.idx)
 	  var.vec <- sort(names(data.file.mod())[num.idx])
-	  print(var.vec)
+	  #print(var.vec)
 	  var.vec <- var.vec[!(tolower(var.vec) %in% c("year","yr"))]
-	  print("numeric.vars.mod")
-	  print(var.vec)
+	  #print("numeric.vars.mod")
+	  #print(var.vec)
 	  return(var.vec)
 	})
 	
@@ -181,8 +181,8 @@ clusters.range <- 1:10
 # Main Panel - Correlation MAtrix
 
    selectedData.main <- reactive({
-    print("input$var.main")
-     print(input$var.main)
+    #print("input$var.main")
+     #print(input$var.main)
      
      # filter out selected years and variables
 		data.use <- data.file.mod()  %>% 
@@ -196,12 +196,12 @@ clusters.range <- 1:10
 	  data.use <- data.use %>% drop_na() 
 		
 		
-			print(head(data.use))
+			#print(head(data.use))
 		return(data.use)
 	})
  
   corr.mat <- reactive({
-  		print("calculating correlation matrix")
+  		#print("calculating correlation matrix")
 		
 		data.in <- selectedData.main()
 		#print(head(data.in))
@@ -230,7 +230,7 @@ clusters.range <- 1:10
 	print("starting main plot")
 	
     corr.fit <- corr.mat()
-    print(input$order.corr)
+    #print(input$order.corr)
     plotCorrMatrix(corr.fit$cor.mat,order=input$order.corr,n.groups=input$n.clusters,plot.type=input$corr.plot.type)  
     
     })
@@ -246,9 +246,9 @@ clusters.range <- 1:10
    ## NEED TO MAKE IT REACTIVE
   
    selectedData.pairwise <- reactive({
-		 print("starting selectedDat.pairwise")
-     print(input$var.1)
-     print(input$var.2)
+		 #print("starting selectedDat.pairwise")
+     #print(input$var.1)
+     #print(input$var.2)
      	
 		data.use <- data.file.mod()  %>% dplyr::select(yr,input$var.1,input$var.2)
     
@@ -264,7 +264,7 @@ clusters.range <- 1:10
 		data.use <- transformData(data.use,type=input$var.2.transform,
 		                          cols=names(data.use)[3],
 		                          zero.convert = NA )	
-		print(head(data.use))
+		#print(head(data.use))
 	return(data.use)
   
   })
@@ -308,7 +308,7 @@ clusters.range <- 1:10
   output$group1.plot <- renderPlotly({
     print("starting group 1 plot")
     data.plot <- selectedData.group1()
-    group1.out <- plotGroup(data.plot,agg.idx = input$group1.idx,plot.type="shiny")
+    group1.out <- plotGroup(data.plot,agg.idx = input$group1.idx,plot.type="shiny",idx.label = input$grp1.idx.label)
     return(group1.out$plot)
     
   })
@@ -326,7 +326,7 @@ clusters.range <- 1:10
   output$group2.plot <- renderPlotly({
     print("starting group 2 plot")
     data.plot <- selectedData.group2()
-    group2.out <- plotGroup(data.plot,agg.idx = input$group2.idx,plot.type="shiny")
+    group2.out <- plotGroup(data.plot,agg.idx = input$group2.idx,plot.type="shiny",idx.label = input$grp2.idx.label)
     return(group2.out$plot)
     
   })
@@ -343,7 +343,7 @@ clusters.range <- 1:10
   output$group3.plot <- renderPlotly({
     print("starting group 3 plot")
     data.plot <- selectedData.group3()
-    group3.out <- plotGroup(data.plot,agg.idx = input$group3.idx,plot.type="shiny")
+    group3.out <- plotGroup(data.plot,agg.idx = input$group3.idx,plot.type="shiny",idx.label = input$grp3.idx.label)
     return(group3.out$plot)
     
   }) 
@@ -361,7 +361,7 @@ clusters.range <- 1:10
   output$group4.plot <- renderPlotly({
     print("starting group 4 plot")
     data.plot <- selectedData.group4()
-    group4.out <- plotGroup(data.plot,agg.idx = input$group4.idx,plot.type="shiny")
+    group4.out <- plotGroup(data.plot,agg.idx = input$group4.idx,plot.type="shiny",idx.label = input$grp4.idx.label)
     return(group4.out$plot)
     
   })  

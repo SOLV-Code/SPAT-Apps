@@ -97,8 +97,7 @@ tabsetPanel(type = "tabs",
                         min = -10, max = 10, value = 0,animate=TRUE),
             selectInput("group1.idx", "Group 1 Agg. Index",  
                         choices = options.list$agg.idx, selected = options.list$agg.idx[1]) ,
-            textInput("grp1.idx.label", label=NULL, value = "Label1"),
-            downloadButton("idx1.download", label = "Download")
+            textInput("grp1.idx.label", label=NULL, value = "Label1")
             ),
          mainPanel(  plotlyOutput("group1.plot"))
         )), # end side bar layout and tab panel for group 1
@@ -113,8 +112,7 @@ tabsetPanel(type = "tabs",
                              min = -10, max = 10, value = 0,animate=TRUE),
                  selectInput("group2.idx", "Group 2 Agg. Index",  
                              choices = options.list$agg.idx, selected = options.list$agg.idx[1]) ,
-                 textInput("grp2.idx.label", label=NULL, value = "Label2"),
-                 downloadButton("idx2.download", label = "Download")
+                 textInput("grp2.idx.label", label=NULL, value = "Label2")
                   ),
         mainPanel(plotlyOutput("group2.plot"))
           )),# end side bar layout and tab panel for group 2
@@ -128,11 +126,10 @@ tabsetPanel(type = "tabs",
                               min = -10, max = 10, value = 0,animate=TRUE),
                   selectInput("group3.idx", "Group 3 Agg. Index",  
                               choices = options.list$agg.idx, selected = options.list$agg.idx[1]) ,
-                  textInput("grp3.idx.label", label=NULL, value = "Label3"),
-                  downloadButton("idx3.download", label = "Download")
+                  textInput("grp3.idx.label", label=NULL, value = "Label3")
                   ),
      mainPanel(plotlyOutput("group3.plot"))
-   )),# end side bar layout and tab panel for group 2
+   )),# end side bar layout and tab panel for group 3
    
    tabPanel("Group 4",sidebarLayout(
      sidebarPanel(width =2,    
@@ -143,12 +140,25 @@ tabsetPanel(type = "tabs",
                               min = -10, max = 10, value = 0,animate=TRUE),
                   selectInput("group4.idx", "Group 4 Agg. Index",  
                               choices = options.list$agg.idx, selected = options.list$agg.idx[1])  ,
-                  textInput("grp4.idx.label", label=NULL, value = "Label4"),
-                  downloadButton("idx4.download", label = "Download")
+                  textInput("grp4.idx.label", label=NULL, value = "Label4")
                   ),
-     mainPanel(plotlyOutput("group4.plot"))
-      ))# end side bar layout and tab panel for group 2      
+     mainPanel(plotlyOutput("group4.plot")) 
+           )),# end side bar layout and tab panel for group 4      
   
+   tabPanel("Download",
+            fluidPage(
+              fluidRow(column(width=6,offset=3,align="center" ,
+                       HTML(paste(
+                           h3("Download a csv file of the current data amended with the aggregate indices you created."),
+                           '<br/>','<br/>'
+                         )))
+                       
+                       ),
+              fluidRow(column(width = 2, offset = 5,align="center" ,
+                              downloadButton("idx.download", label = "Download")  
+                              )))
+        )
+   
    
    
                       
