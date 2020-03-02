@@ -29,9 +29,11 @@ options.list <- list(transforms = c("none","log","z-score","perc_rank"),
 
 # START UI -------------------------------------------
 	
-navbarPage( tags$img(src='Final - State of the Salmon Program - LT. Design-01.png', height="40px"), id = "MainTab",
-  
-  #"SPAT - Correlation Analysis", id = "MainTab",
+navbarPage( "SPAT - Correlation Analysis", id = "MainTab",
+            
+  #tags$img(src='Final - State of the Salmon Program - LT. Design-01.png', height="40px"), id = "MainTab",
+  # doing this then puts the image file name into the browser tab...
+  #
 
 
 # Start  disclaimer panel
