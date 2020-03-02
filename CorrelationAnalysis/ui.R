@@ -29,20 +29,22 @@ options.list <- list(transforms = c("none","log","z-score","perc_rank"),
 
 # START UI -------------------------------------------
 	
-navbarPage("SPAT - Correlation Analysis", id = "MainTab",
+navbarPage( tags$img(src='Final - State of the Salmon Program - LT. Design-01.png', height="40px"), id = "MainTab",
+  
+  #"SPAT - Correlation Analysis", id = "MainTab",
 
 
 # Start  disclaimer panel
 
-	 tabPanel("Disclaimer",
+	 tabPanel("Start",
 
 fluidPage(
 
-  titlePanel("Disclaimer"),
-
+  titlePanel("Start"),
+  fluidRow(column(8, img(src="Final - State of the Salmon Program - LT. Design-01.png", align = "left",height="120px"))),
   fluidRow(
     column(8,
-	  includeMarkdown("Markdown/disclaimer.md")
+	  includeMarkdown("Markdown/start.md")
     )
   )
 )

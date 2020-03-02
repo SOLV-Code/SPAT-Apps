@@ -1,4 +1,14 @@
-#### Protoype version: 2020-01-31-v1
+
+#### About this App
+
+* SOS
+* SPAT
+* Corr Analysis App
+
+
+#### Protoype Disclaimer
+
+**Version: 2020-03-02-v1**
 
 
 You are working with a rapidly evolving prototype. Things may look a lot different
