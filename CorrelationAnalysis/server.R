@@ -292,6 +292,14 @@ clusters.range <- 1:10
   
   
   
+  output$pair.boxplot<- renderPlot({
+    print("starting pair box plot")
+    data.plot <- selectedData.pairwise() %>% select(-yr)
+    plotBoxes(data.plot)
+    
+  })
+  
+  
   #--------------------------------------------
   # Grouping Plots
 
@@ -305,13 +313,22 @@ clusters.range <- 1:10
                               zero.convert = NA )
     return(data.use) })
 
+
   output$group1.plot <- renderPlotly({
-    print("starting group 1 plot")
+    print("starting group 1 line plot")
     data.plot <- selectedData.group1()
     group1.out <- plotGroup(data.plot,agg.idx = input$group1.idx,plot.type="shiny",idx.label = input$grp1.idx.label)
     return(group1.out$plot)
-    
-  })
+      })
+  
+
+    output$group1.plot.box <- renderPlot({
+     print("starting group 1 box plot")
+      data.plot <- selectedData.group1() %>% select(-yr)
+      plotBoxes(data.plot)
+    })
+
+  
   
   selectedData.group2 <- reactive({
      

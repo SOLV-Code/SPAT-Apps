@@ -103,7 +103,10 @@ tabsetPanel(type = "tabs",
                         choices = options.list$agg.idx, selected = options.list$agg.idx[1]) ,
             textInput("grp1.idx.label", label=NULL, value = "Label1")
             ),
-         mainPanel(  plotlyOutput("group1.plot"))
+         mainPanel(tabsetPanel(type = "tabs",
+                  tabPanel("Line", plotlyOutput("group1.plot")),
+                   tabPanel("Box", plotOutput("group1.plot.box"))
+                  )) # end main panel
         )), # end side bar layout and tab panel for group 1
          
          
@@ -215,7 +218,8 @@ tabPanel("3 Explore Pairs",	value = "pairwise",
                                            conditionalPanel("input.corrplotshow", plotlyOutput("series.corr.plot"))))
                                 ),
 
-                         tabPanel("Some Diagnostic Plot" ),
+                         tabPanel("Box Plot", plotOutput("pair.boxplot")),
+                         tabPanel("Scatter Plot"),
                          tabPanel("Correlations - Table")            
                          
                          
