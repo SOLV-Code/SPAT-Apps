@@ -106,6 +106,8 @@ clusters.range <- 1:10
 	
 	vars.mod.obs <- observe({print(numeric.vars.mod())})
 	
+	#n.vars <- reactive({ return(length(numeric.vars.mod))})
+	
 	numeric.vars.mod <- reactive({
 	  
 	  #print("check")
@@ -133,7 +135,7 @@ clusters.range <- 1:10
 	# Variable List for Dropdown - Main Panel
 	output$var.main.menu <- renderUI({
 			selectInput("var.main", label = "Numeric Variables", choices = numeric.vars.mod(),  
-			     multiple=TRUE,selected = numeric.vars.mod()  )
+			     multiple=TRUE,selected = numeric.vars.mod()[1:8] ) #n.vars()
 			})	
 			
 	
@@ -236,7 +238,14 @@ clusters.range <- 1:10
     })
 	
   
-
+  output$corr.mat.splom <- renderPlot({
+    print("starting main plot splom")
+    
+    data.in <- selectedData.main()
+    #print(input$order.corr)
+    plotSPLOM(data.in)  
+    
+  })
 
 
 
@@ -292,6 +301,23 @@ clusters.range <- 1:10
   
   
   
+  output$pair.boxplot<- renderPlot({
+    print("starting pair box plot")
+    data.plot <- selectedData.pairwise() %>% select(-yr)
+    plotBoxes(data.plot)
+    
+  })
+  
+  
+  output$pair.splom<- renderPlot({
+    print("starting pair splom plot")
+    data.plot <- selectedData.pairwise() %>% select(-yr)
+    plotSPLOM(data.plot)
+    
+  })
+  
+  
+  
   #--------------------------------------------
   # Grouping Plots
 
@@ -305,13 +331,28 @@ clusters.range <- 1:10
                               zero.convert = NA )
     return(data.use) })
 
+
   output$group1.plot <- renderPlotly({
-    print("starting group 1 plot")
+    print("starting group 1 line plot")
     data.plot <- selectedData.group1()
     group1.out <- plotGroup(data.plot,agg.idx = input$group1.idx,plot.type="shiny",idx.label = input$grp1.idx.label)
     return(group1.out$plot)
+      })
+  
+
+    output$group1.plot.box <- renderPlot({
+     print("starting group 1 box plot")
+      data.plot <- selectedData.group1() %>% select(-yr)
+      plotBoxes(data.plot)
+    })
     
-  })
+    output$group1.plot.pairwise <- renderPlot({
+      print("starting group 1 pairwise plot")
+      data.plot <- selectedData.group1() %>% select(-yr)
+      plotSPLOM(data.plot)
+    })
+
+  
   
   selectedData.group2 <- reactive({
      
