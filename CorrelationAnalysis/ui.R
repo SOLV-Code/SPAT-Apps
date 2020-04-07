@@ -105,7 +105,8 @@ tabsetPanel(type = "tabs",
             ),
          mainPanel(tabsetPanel(type = "tabs",
                   tabPanel("Line", plotlyOutput("group1.plot")),
-                   tabPanel("Box", plotOutput("group1.plot.box"))
+                   tabPanel("Box", plotOutput("group1.plot.box")),
+                  tabPanel("Pairwise", plotOutput("group1.plot.pairwise"))
                   )) # end main panel
         )), # end side bar layout and tab panel for group 1
          
@@ -220,7 +221,7 @@ tabPanel("3 Explore Pairs",	value = "pairwise",
 
                          tabPanel("Box Plot", plotOutput("pair.boxplot")),
                          tabPanel("Scatter Plot"),
-                         tabPanel("Correlations - Table")            
+                         tabPanel("Overview",plotOutput("pair.splom"))            
                          
                          
              ) # end tabset  inside main panel for 2 values
@@ -256,7 +257,7 @@ tabPanel("4 Correlation Matrix",	value = "CorrMat",
 						tabPanel("Plot", 
 										plotOutput("corr.mat.plot",height=700)), 
 						tabPanel("Table",	DT::dataTableOutput("corr.table")),
-						tabPanel("Diagnostics") #,
+						tabPanel("Pairwise",plotOutput("corr.mat.splom")) #,
 						#tabPanel("Select Variables"
 						#) #end  tabpanel for settings
 

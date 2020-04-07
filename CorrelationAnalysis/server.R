@@ -106,6 +106,8 @@ clusters.range <- 1:10
 	
 	vars.mod.obs <- observe({print(numeric.vars.mod())})
 	
+	#n.vars <- reactive({ return(length(numeric.vars.mod))})
+	
 	numeric.vars.mod <- reactive({
 	  
 	  #print("check")
@@ -133,7 +135,7 @@ clusters.range <- 1:10
 	# Variable List for Dropdown - Main Panel
 	output$var.main.menu <- renderUI({
 			selectInput("var.main", label = "Numeric Variables", choices = numeric.vars.mod(),  
-			     multiple=TRUE,selected = numeric.vars.mod()  )
+			     multiple=TRUE,selected = numeric.vars.mod()[1:8] ) #n.vars()
 			})	
 			
 	
@@ -236,7 +238,14 @@ clusters.range <- 1:10
     })
 	
   
-
+  output$corr.mat.splom <- renderPlot({
+    print("starting main plot splom")
+    
+    data.in <- selectedData.main()
+    #print(input$order.corr)
+    plotSPLOM(data.in)  
+    
+  })
 
 
 
@@ -300,6 +309,15 @@ clusters.range <- 1:10
   })
   
   
+  output$pair.splom<- renderPlot({
+    print("starting pair splom plot")
+    data.plot <- selectedData.pairwise() %>% select(-yr)
+    plotSPLOM(data.plot)
+    
+  })
+  
+  
+  
   #--------------------------------------------
   # Grouping Plots
 
@@ -326,6 +344,12 @@ clusters.range <- 1:10
      print("starting group 1 box plot")
       data.plot <- selectedData.group1() %>% select(-yr)
       plotBoxes(data.plot)
+    })
+    
+    output$group1.plot.pairwise <- renderPlot({
+      print("starting group 1 pairwise plot")
+      data.plot <- selectedData.group1() %>% select(-yr)
+      plotSPLOM(data.plot)
     })
 
   
