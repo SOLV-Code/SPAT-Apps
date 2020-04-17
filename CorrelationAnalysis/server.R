@@ -352,7 +352,11 @@ clusters.range <- 1:10
       plotSPLOM(data.plot)
     })
 
-  
+    output$group1.plot.ranked<- renderPlot({
+      print("starting group 1 ranked plot")
+      data.plot <- selectedData.group1() %>% select(-yr)
+      plotRanked(data.plot,trim = input$ranks.trim,maxvars = max(c(10,length(data.plot))))
+    })  
   
   selectedData.group2 <- reactive({
      
