@@ -106,7 +106,11 @@ tabsetPanel(type = "tabs",
          mainPanel(tabsetPanel(type = "tabs",
                   tabPanel("Line", plotlyOutput("group1.plot")),
                    tabPanel("Box", plotOutput("group1.plot.box")),
-                  tabPanel("Pairwise", plotOutput("group1.plot.pairwise"))
+                  tabPanel("Pairwise", plotOutput("group1.plot.pairwise")  ),
+                  tabPanel("Ranked", plotOutput("group1.plot.ranked"),
+                           sliderInput("ranks.trim", "Trim (%ile whiskers)",  sep="",
+                                       min = 0, max = 30, value = 5,animate=FALSE)
+                           )
                   )) # end main panel
         )), # end side bar layout and tab panel for group 1
          
